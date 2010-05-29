@@ -24,19 +24,23 @@
 (defn- cdr-mem-ref [idx]
   (nth @cdr-mem idx))
 
-(defn- update!
-  ([new-car-mem]
-    (dosync
-      (set-car-mem new-car-mem)))
-  ([new-car-mem new-cdr-mem]
-    (dosync
-      (set-car-mem new-car-mem)
-      (set-cdr-mem new-cdr-mem)))
-  ([new-car-mem new-cdr-mem new-next-free]
-    (dosync
-      (set-car-mem new-car-mem)
-      (set-cdr-mem new-cdr-mem)
-      (set-next-free new-next-free))))
+(defn- update-car-mem!
+  [new-car-mem]
+  (dosync
+    (set-car-mem new-car-mem)))
+
+(defn- update-car-mem-and-cdr-mem!
+  [new-car-mem new-cdr-mem]
+  (dosync
+    (set-car-mem new-car-mem)
+    (set-cdr-mem new-cdr-mem)))
+
+(defn- update-car-mem-cdr-mem-and-next-free!
+  [new-car-mem new-cdr-mem new-next-free]
+  (dosync
+    (set-car-mem new-car-mem)
+    (set-cdr-mem new-cdr-mem)
+    (set-next-free new-next-free)))
 
 (defn- update-cdr-mem!
   [new-cdr-mem]
@@ -53,7 +57,7 @@
   (let [mem (range 1 (+ mem-size 1))]
     (let [cars (vec mem)
           cdrs (vec (map (fn [_] null) mem))]
-      (update! cars cdrs)
+      (update-car-mem-and-cdr-mem! cars cdrs)
       null)))
 
 (defprotocol manual-memory-manager
@@ -72,7 +76,7 @@
   (cdr [self]
     (cdr-mem-ref (.addr self)))
   (set-car! [self val]
-    (update!
+    (update-car-mem!
       (car-mem-set (.addr self) val))
     null)
   (set-cdr! [self val]
@@ -89,10 +93,10 @@
 (defn xcons
   [car- cdr-]
   (let [addr @next-free]
-    (update!
-      (car-mem-set addr car-) ; new-car-mem
-      (cdr-mem-set addr cdr-) ; new-cdr-mem
-      (car-mem-ref addr)) ; new-next-free
+    (update-car-mem-cdr-mem-and-next-free!
+      (car-mem-set addr car-)
+      (cdr-mem-set addr cdr-)
+      (car-mem-ref addr))
     (pair. addr)))
 
 (init-mem)
