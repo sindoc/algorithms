@@ -1,4 +1,5 @@
-;(ns com.khakbaz.algorithms.memory-management.manual.pairs.pair)
+(ns com.khakbaz.algorithms.memory-management.manual.pairs.pair
+  (:refer-clojure :exclude [cons]))
 
 (def null nil)
 (def mem-size 5)
@@ -61,15 +62,19 @@
       null)))
 
 (defprotocol manual-memory-manager
+  "Memory should be freed by the programmer."
   (free [p]))
 
 (defprotocol fixed-size-memory-manager
-  (car [p])
-  (cdr [p])
-  (set-car! [p val])
-  (set-cdr! [p val]))
+  "Manages fixed-size memory chunks,
+  i.e. dotted pairs as opposed to vectors."
+  (car [p] "Return the first element of the fixed structure.")
+  (cdr [p] "Return the second element of the fixed structure.")
+  (set-car! [p val] "Adapt the value of the first cell.")
+  (set-cdr! [p val] "Adapt the value of the second cell."))
 
-(deftype pair [addr]
+(deftype pair
+  [addr]
   fixed-size-memory-manager
   (car [self]
     (car-mem-ref (.addr self)))
@@ -90,7 +95,7 @@
       (.addr self))
     null))
 
-(defn xcons
+(defn cons
   [car- cdr-]
   (let [addr @next-free]
     (update-car-mem-cdr-mem-and-next-free!
@@ -101,14 +106,14 @@
 
 (init-mem)
 
-(def c (xcons 3 4))
+(def c (cons 3 4))
 (set-car! c (* (car c) 10))
 (set-cdr! c (* (cdr c) 10))
 (free c)
 
-(def c1 (xcons 1 2))
-(def c2 (xcons 3 4))
-(def c3 (xcons c1 c2))
+(def c1 (cons 1 2))
+(def c2 (cons 3 4))
+(def c3 (cons c1 c2))
 (free c3)
 (free c1)
 (free c2)
