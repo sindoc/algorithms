@@ -5,3 +5,6 @@
 (define c3 (xcons c1 c2))
 (display (list c1 c2 c3))
 (newline)
+(xfree c3)
+(xfree c1)
+(xfree c2)
