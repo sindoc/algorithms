@@ -1,19 +1,24 @@
 (ns com.khakbaz.algorithms.memory-management.manual.pairs.pair
   (:refer-clojure :exclude [cons]))
 
+(defprotocol manual-memory-manager
+  "Memory should be freed by the programmer."
+  (free [p]))
+
+(defprotocol fixed-size-memory-manager
+  "Manages fixed-size memory chunks,
+  i.e. dotted pairs as opposed to vectors."
+  (car [p] "Return the first element of the fixed structure.")
+  (cdr [p] "Return the second element of the fixed structure.")
+  (set-car! [p val] "Adapt the value of the first cell.")
+  (set-cdr! [p val] "Adapt the value of the second cell."))
+
 (def null nil)
 (def mem-size 5)
 
 (def car-mem (ref nil))
 (def cdr-mem (ref nil))
 (def next-free (ref 0))
-
-(defn- set-car-mem [new-car-mem]
-  (ref-set car-mem new-car-mem))
-(defn- set-cdr-mem [new-cdr-mem]
-  (ref-set cdr-mem new-cdr-mem))
-(defn- set-next-free [new-next-free]
-  (ref-set next-free new-next-free))
 
 (defn- car-mem-set [idx new-val]
   (assoc @car-mem idx new-val))
@@ -28,31 +33,31 @@
 (defn- update-car-mem!
   [new-car-mem]
   (dosync
-    (set-car-mem new-car-mem)))
+    (ref-set car-mem new-car-mem)))
 
 (defn- update-car-mem-and-cdr-mem!
   [new-car-mem new-cdr-mem]
   (dosync
-    (set-car-mem new-car-mem)
-    (set-cdr-mem new-cdr-mem)))
+    (ref-set car-mem new-car-mem)
+    (ref-set cdr-mem new-cdr-mem)))
 
 (defn- update-car-mem-cdr-mem-and-next-free!
   [new-car-mem new-cdr-mem new-next-free]
   (dosync
-    (set-car-mem new-car-mem)
-    (set-cdr-mem new-cdr-mem)
-    (set-next-free new-next-free)))
+    (ref-set car-mem new-car-mem)
+    (ref-set cdr-mem new-cdr-mem)
+    (ref-set next-free new-next-free)))
 
 (defn- update-cdr-mem!
   [new-cdr-mem]
   (dosync
-    (set-cdr-mem new-cdr-mem)))
+    (ref-set cdr-mem new-cdr-mem)))
 
 (defn- update-car-mem-and-next-free!
   [new-car-mem new-next-free]
   (dosync
-    (set-car-mem new-car-mem)
-    (set-next-free new-next-free)))
+    (ref-set car-mem new-car-mem)
+    (ref-set next-free new-next-free)))
 
 (defn- init-mem []
   (let [mem (range 1 (+ mem-size 1))]
@@ -60,18 +65,6 @@
           cdrs (vec (map (fn [_] null) mem))]
       (update-car-mem-and-cdr-mem! cars cdrs)
       null)))
-
-(defprotocol manual-memory-manager
-  "Memory should be freed by the programmer."
-  (free [p]))
-
-(defprotocol fixed-size-memory-manager
-  "Manages fixed-size memory chunks,
-  i.e. dotted pairs as opposed to vectors."
-  (car [p] "Return the first element of the fixed structure.")
-  (cdr [p] "Return the second element of the fixed structure.")
-  (set-car! [p val] "Adapt the value of the first cell.")
-  (set-cdr! [p val] "Adapt the value of the second cell."))
 
 (deftype pair
   [addr]
@@ -114,6 +107,6 @@
 (def c1 (cons 1 2))
 (def c2 (cons 3 4))
 (def c3 (cons c1 c2))
-(free c3)
-(free c1)
-(free c2)
+;(free c3)
+;(free c1)
+;(free c2)
