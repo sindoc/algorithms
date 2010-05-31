@@ -13,12 +13,14 @@
   (set-car! [p val] "Adapt the value of the first cell.")
   (set-cdr! [p val] "Adapt the value of the second cell."))
 
+(deftype pair [addr])
+
 (def null nil)
 (def mem-size 5)
 
-(def car-mem (ref nil))
-(def cdr-mem (ref nil))
-(def next-free (ref 0))
+(def #^{:private true} car-mem (ref nil))
+(def #^{:private true} cdr-mem (ref nil))
+(def #^{:private true} next-free (ref 0))
 
 (defn- car-mem-set [idx new-val]
   (assoc @car-mem idx new-val))
@@ -66,27 +68,32 @@
       (update-car-mem-and-cdr-mem! cars cdrs)
       null)))
 
-(deftype pair
-  [addr]
-  fixed-size-memory-manager
-  (car [self]
-    (car-mem-ref (.addr self)))
-  (cdr [self]
-    (cdr-mem-ref (.addr self)))
-  (set-car! [self val]
-    (update-car-mem!
-      (car-mem-set (.addr self) val))
-    null)
-  (set-cdr! [self val]
-    (update-cdr-mem!
-      (cdr-mem-set (.addr self) val))
-    null)
-  manual-memory-manager
-  (free [self]
-    (update-car-mem-and-next-free!
-      (car-mem-set (.addr self) @next-free)
-      (.addr self))
-    null))
+(defn car
+  [self]
+  (car-mem-ref (.addr self)))
+
+(defn cdr
+  [self]
+  (cdr-mem-ref (.addr self)))
+
+(defn set-car!
+  [self val]
+  (update-car-mem!
+    (car-mem-set (.addr self) val))
+  null)
+
+(defn set-cdr!
+  [self val]
+  (update-cdr-mem!
+    (cdr-mem-set (.addr self) val))
+  null)
+
+(defn free
+  [self]
+  (update-car-mem-and-next-free!
+    (car-mem-set (.addr self) @next-free)
+    (.addr self))
+  null)
 
 (defn cons
   [car- cdr-]
@@ -96,6 +103,15 @@
       (cdr-mem-set addr cdr-)
       (car-mem-ref addr))
     (pair. addr)))
+
+(extend pair
+  fixed-size-memory-manager
+  {:car car
+   :cdr cdr
+   :set-car! set-car!
+   :set-cdr! set-cdr!}
+  manual-memory-manager
+  {:free free})
 
 (init-mem)
 
@@ -107,6 +123,6 @@
 (def c1 (cons 1 2))
 (def c2 (cons 3 4))
 (def c3 (cons c1 c2))
-;(free c3)
-;(free c1)
-;(free c2)
+(free c3)
+(free c1)
+(free c2)
