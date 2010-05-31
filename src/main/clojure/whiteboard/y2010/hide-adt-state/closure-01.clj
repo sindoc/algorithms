@@ -1,4 +1,4 @@
-(ns com.khakbaz.algorithms.test.whiteboard.y2010)
+(ns com.khakbaz.algorithms.clojure.whiteboard.y2010.hide-adt-state.closure-01)
 
 (defn make-module []
   (let [state (atom 0)]
