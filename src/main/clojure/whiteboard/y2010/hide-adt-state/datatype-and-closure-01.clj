@@ -1,16 +1,19 @@
 (ns com.khakbaz.algorithms.clojure.whiteboard.y2010.hide-adt-state.datatype-and-closure-01)
 
+(declare op-a)
+
 (defprotocol prot-a
   (op-a [self x y]))
 
+(deftype t-a [member])
+
 (let [state (atom 10)]
   (defn op-a
-    [self x y]
-    (+ x y (.member self)  @state)))
+    [this x y]
+    (+ (.member this) x y @state))
 
-(deftype t-a [member]
-  prot-a
-  (op-a [self x y]
-    (op-a self x y)))
+  (extend t-a
+    prot-a
+    {:op-a op-a}))
 
 (def t-a-1 (t-a. 5))
