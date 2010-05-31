@@ -1,3 +1,6 @@
+;; Example from Wikibooks:
+;; http://en.wikibooks.org/wiki/Clojure_Programming/Concepts#Employee_Record_Manipulation
+
 (alias 'set 'clojure.set)   ; use set/fn-name rather than clojure.set/fn-name
 
 (defstruct employee

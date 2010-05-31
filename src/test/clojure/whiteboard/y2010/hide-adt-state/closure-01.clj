@@ -1,7 +1,7 @@
 (ns com.khakbaz.algorithms.test.whiteboard.y2010)
 
 (defn make-module []
-  (let [state 0]
+  (let [state (atom 0)]
     (defn public-operation [x y]
       (println "I'm a public operation on this datatype.")
       (println "I consume the following arguments:" x y))
