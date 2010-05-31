@@ -1,4 +1,4 @@
-(ns com.khakbaz.algorithms.memory.manual.pairs.pair
+(ns com.khakbaz.algorithms.clojure.memory.manual.pairs.pair
   (:refer-clojure :exclude [cons]))
 
 (defprotocol manual-memory-manager
@@ -18,7 +18,7 @@
 (def null nil)
 (def mem-size 5)
 
-(def #^{:private true} car-mem (ref nil))
+(def car-mem (ref nil))
 (def #^{:private true} cdr-mem (ref nil))
 (def #^{:private true} next-free (ref 0))
 
