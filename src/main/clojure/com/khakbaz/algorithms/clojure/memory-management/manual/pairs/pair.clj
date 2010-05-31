@@ -15,7 +15,6 @@
 
 (deftype pair [addr])
 
-
 (def null nil)
 (def mem-size 5)
 
