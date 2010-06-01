@@ -1,20 +1,11 @@
 (ns com.khakbaz.algorithms.clojure.memory.fixed.manual.pair
-  (:require com.khakbaz.algorithms.clojure.memory.fixed.pair :as p)
+  (:require [com.khakbaz.algorithms.clojure.memory.fixed.pair :as p])
   (:refer-clojure :exclude [cons]))
 
 (deftype pair [addr])
 
-(extend pair
-  p/fixed-size-memory-manager
-  {:car car
-   :cdr cdr
-   :set-car! set-car!
-   :set-cdr! set-cdr!}
-  p/manual-memory-manager
-  {:free free})
-
-(def null nil)
 (def mem-size 5)
+(def null nil)
 
 (def #^{:private true} car-mem (ref nil))
 (def #^{:private true} cdr-mem (ref nil))
@@ -101,5 +92,14 @@
       (cdr-mem-set addr cdr-)
       (car-mem-ref addr))
     (pair. addr)))
+
+(extend pair
+  p/fixed-size-memory-manager
+  {:car car
+   :cdr cdr
+   :set-car! set-car!
+   :set-cdr! set-cdr!}
+  p/fixed-size-manual-memory-manager
+  {:free free})
 
 (init-mem)
