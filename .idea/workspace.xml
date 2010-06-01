@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" readonly="true" id="2cf7be89-ee25-4d0f-86fd-b05a1b271af5" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/clojure/main/com/khakbaz/algorithms/clojure/memory/manual/pairs/pair-test.clj" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/clojure/main/com/khakbaz/algorithms/clojure/memory/manual/fixed/pair.clj" afterPath="$PROJECT_DIR$/src/clojure/main/com/khakbaz/algorithms/clojure/memory/manual/fixed/pair.clj" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/clojure/main/com/khakbaz/algorithms/clojure/memory/manual/pairs/pair.clj" afterPath="$PROJECT_DIR$/src/clojure/main/com/khakbaz/algorithms/clojure/memory/manual/pairs/pair.clj" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/clojure/main/com/khakbaz/algorithms/clojure/memory/manual/fixed/pair-test.clj" afterPath="$PROJECT_DIR$/src/clojure/main/com/khakbaz/algorithms/clojure/memory/manual/fixed/pair-test.clj" />
     </list>
     <ignored mask="*.bak" />
     <ignored path="$USER_HOME_GRIFFON$/" />
@@ -71,8 +71,8 @@
       <property name="field_breakpoints_groupByClasses" value="true" />
       <property name="method_breakpoints_groupByClasses" value="true" />
       <property name="exception_breakpoints_viewId" value="TABLE" />
-      <property name="exception_breakpoints_groupByClasses" value="true" />
       <property name="field_breakpoints_viewId" value="TABLE" />
+      <property name="exception_breakpoints_groupByClasses" value="true" />
       <property name="method_breakpoints_groupByMethods" value="false" />
     </ui_properties>
   </component>
@@ -91,19 +91,19 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="pair.clj" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/clojure/main/com/khakbaz/algorithms/clojure/memory/manual/pairs/pair.clj">
+      <file leaf-file-name="pair-test.clj" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/clojure/main/com/khakbaz/algorithms/clojure/memory/manual/fixed/pair-test.clj">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="20" column="4" selection-start="619" selection-end="619" vertical-scroll-proportion="0.8192771">
+            <state line="3" column="0" selection-start="144" selection-end="144" vertical-scroll-proportion="0.12289157">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="pair-test.clj" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/clojure/main/com/khakbaz/algorithms/clojure/memory/manual/pairs/pair-test.clj">
+      <file leaf-file-name="pair.clj" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/clojure/main/com/khakbaz/algorithms/clojure/memory/manual/fixed/pair.clj">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="0" column="64" selection-start="4" selection-end="64" vertical-scroll-proportion="0.0">
+            <state line="78" column="0" selection-start="1981" selection-end="1981" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -124,8 +124,6 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/pom.xml" />
-        <option value="$PROJECT_DIR$/src/test/clojure/whiteboard/y2010/maintain-state-using-ref.clj" />
         <option value="$PROJECT_DIR$/src/test/clojure/whiteboard/y2010/hide-adt-state-using-closure.clj" />
         <option value="$PROJECT_DIR$/src/test/clojure/whiteboard/y2010/hide-adt-state/closure-02.clj" />
         <option value="$PROJECT_DIR$/src/test/clojure/whiteboard/y2010/hide-adt-state/test-datatype-01.clj" />
@@ -140,6 +138,8 @@
         <option value="$PROJECT_DIR$/src/clojure/main/com/khakbaz/algorithms/clojure/memory-management/manual/pairs/pair-test.clj" />
         <option value="$PROJECT_DIR$/src/clojure/main/com/khakbaz/algorithms/clojure/memory/manual/pairs/pair-test.clj" />
         <option value="$PROJECT_DIR$/src/clojure/main/com/khakbaz/algorithms/clojure/memory/manual/pairs/pair.clj" />
+        <option value="$PROJECT_DIR$/src/clojure/main/com/khakbaz/algorithms/clojure/memory/manual/fixed/pair.clj" />
+        <option value="$PROJECT_DIR$/src/clojure/main/com/khakbaz/algorithms/clojure/memory/manual/fixed/pair-test.clj" />
       </list>
     </option>
   </component>
@@ -178,8 +178,8 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="PackagesPane" />
+      <pane id="Favorites" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -211,30 +211,8 @@
               <option name="myItemId" value="src" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
-          </PATH>
-          <PATH>
             <PATH_ELEMENT>
-              <option name="myItemId" value="algorithms" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="algorithms" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="clojure" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="clojure" />
+              <option name="myItemId" value="scheme" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -263,14 +241,74 @@
               <option name="myItemId" value="clojure" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
+          </PATH>
+          <PATH>
             <PATH_ELEMENT>
-              <option name="myItemId" value="pairs" />
+              <option name="myItemId" value="algorithms" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="algorithms" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="clojure" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="clojure" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="manual" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="algorithms" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="algorithms" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="clojure" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="clojure" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="manual" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="fixed" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
         </subPane>
       </pane>
-      <pane id="Favorites" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -287,9 +325,9 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="MemberChooser.showClasses" value="true" />
     <property name="GoToClass.includeLibraries" value="false" />
-    <property name="dynamic.classpath" value="false" />
-    <property name="options.splitter.details.proportions" value="0.2" />
     <property name="options.searchVisible" value="true" />
+    <property name="options.splitter.details.proportions" value="0.2" />
+    <property name="dynamic.classpath" value="false" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -298,7 +336,7 @@
       <recent name="F:\clj\algorithms\src\main\clojure\whiteboard" />
     </key>
   </component>
-  <component name="RunManager" selected="Clojure Script.pair">
+  <component name="RunManager" selected="Clojure Script.pair-test">
     <configuration default="true" type="ClojureScriptRunConfiguration" factoryName="Clojure Script">
       <module name="" />
       <setting name="path" value="" />
@@ -434,10 +472,10 @@
     </configuration>
     <configuration default="false" name="pair" type="ClojureScriptRunConfiguration" factoryName="Clojure Script">
       <module name="algorithms" />
-      <setting name="path" value="$PROJECT_DIR$/src/main/clojure/memory/manual/pairs/pair.clj" />
+      <setting name="path" value="$PROJECT_DIR$/src/clojure/main/com/khakbaz/algorithms/clojure/memory/manual/fixed/pair.clj" />
       <setting name="vmparams" value="" />
       <setting name="params" value="" />
-      <setting name="workDir" value="$PROJECT_DIR$/src/clojure/main/com/khakbaz/algorithms/clojure/memory/manual/pairs" />
+      <setting name="workDir" value="$PROJECT_DIR$/src/clojure/main/com/khakbaz/algorithms/clojure/memory/manual/fixed" />
       <setting name="repl" value="true" />
       <RunnerSettings RunnerId="Debug">
         <option name="DEBUG_PORT" value="4557" />
@@ -473,10 +511,10 @@
     </configuration>
     <configuration default="false" name="pair-test" type="ClojureScriptRunConfiguration" factoryName="Clojure Script">
       <module name="algorithms" />
-      <setting name="path" value="$PROJECT_DIR$/src/clojure/main/com/khakbaz/algorithms/clojure/memory/manual/pairs/pair-test.clj" />
+      <setting name="path" value="$PROJECT_DIR$/src/clojure/main/com/khakbaz/algorithms/clojure/memory/manual/fixed/pair-test.clj" />
       <setting name="vmparams" value="" />
       <setting name="params" value="" />
-      <setting name="workDir" value="$PROJECT_DIR$/src/clojure/main/com/khakbaz/algorithms/clojure/memory/manual/pairs" />
+      <setting name="workDir" value="$PROJECT_DIR$/src/clojure/main/com/khakbaz/algorithms/clojure/memory/manual/fixed" />
       <setting name="repl" value="true" />
       <RunnerSettings RunnerId="Run" />
       <ConfigurationWrapper RunnerId="Run" />
@@ -558,7 +596,7 @@
     <option name="ENABLE_BACKGROUND_PROCESSES" value="false" />
     <option name="CHANGED_ON_SERVER_INTERVAL" value="60" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" value="Refactored memory-management to memory." />
+    <option name="LAST_COMMIT_MESSAGE" value="Meer formatting. Moved the type extension to the top." />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="true" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_FILES_UP_TO_DATE_BEFORE_COMMIT" value="false" />
@@ -587,6 +625,9 @@
     <MESSAGE value="Moved Clojure source files to com/khakbaz/algorithms/clojure" />
     <MESSAGE value="Some housekeeping in IntelliJ." />
     <MESSAGE value="Refactored memory-management to memory." />
+    <MESSAGE value="Separated unit tests; later to be moved to src/clojure/test." />
+    <MESSAGE value="Corrected wrong paths." />
+    <MESSAGE value="Meer formatting. Moved the type extension to the top." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -613,16 +654,16 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/clojure/main/com/khakbaz/algorithms/clojure/memory/manual/pairs/pair-test.clj">
+    <entry file="file://$PROJECT_DIR$/src/clojure/main/com/khakbaz/algorithms/clojure/memory/manual/fixed/pair.clj">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="64" selection-start="4" selection-end="64" vertical-scroll-proportion="0.0">
+        <state line="78" column="0" selection-start="1981" selection-end="1981" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/clojure/main/com/khakbaz/algorithms/clojure/memory/manual/pairs/pair.clj">
+    <entry file="file://$PROJECT_DIR$/src/clojure/main/com/khakbaz/algorithms/clojure/memory/manual/fixed/pair-test.clj">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="20" column="4" selection-start="619" selection-end="619" vertical-scroll-proportion="0.8192771">
+        <state line="3" column="0" selection-start="144" selection-end="144" vertical-scroll-proportion="0.12289157">
           <folding />
         </state>
       </provider>

@@ -1,4 +1,4 @@
-(ns com.khakbaz.algorithms.clojure.memory.manual.pairs.pair
+(ns com.khakbaz.algorithms.clojure.memory.manual.fixed.pair
   (:refer-clojure :exclude [cons]))
 
 (defprotocol manual-memory-manager
