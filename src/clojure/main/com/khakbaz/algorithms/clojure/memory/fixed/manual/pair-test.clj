@@ -1,5 +1,5 @@
-(ns com.khakbaz.algorithms.clojure.memory.manual.fixed.test-pair
-  (:require [com.khakbaz.algorithms.clojure.memory.manual.fixed.pair :as p]))
+(ns com.khakbaz.algorithms.clojure.memory.fixed.manual.test-pair
+  (:require [com.khakbaz.algorithms.clojure.memory.fixed.manual.pair :as p]))
 
 (def c (p/cons 3 4))
 (p/set-car! c (* (p/car c) 10))
