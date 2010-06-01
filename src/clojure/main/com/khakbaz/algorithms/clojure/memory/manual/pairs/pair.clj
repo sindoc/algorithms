@@ -15,10 +15,19 @@
 
 (deftype pair [addr])
 
+(extend pair
+  fixed-size-memory-manager
+  {:car car
+   :cdr cdr
+   :set-car! set-car!
+   :set-cdr! set-cdr!}
+  manual-memory-manager
+  {:free free})
+
 (def null nil)
 (def mem-size 5)
 
-(def car-mem (ref nil))
+(def #^{:private true} car-mem (ref nil))
 (def #^{:private true} cdr-mem (ref nil))
 (def #^{:private true} next-free (ref 0))
 
@@ -103,14 +112,5 @@
       (cdr-mem-set addr cdr-)
       (car-mem-ref addr))
     (pair. addr)))
-
-(extend pair
-  fixed-size-memory-manager
-  {:car car
-   :cdr cdr
-   :set-car! set-car!
-   :set-cdr! set-cdr!}
-  manual-memory-manager
-  {:free free})
 
 (init-mem)
