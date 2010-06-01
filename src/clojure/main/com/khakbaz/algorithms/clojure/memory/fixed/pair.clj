@@ -11,3 +11,5 @@
   (cdr [p] "Return the second element of the fixed structure.")
   (set-car! [p val] "Adapt the value of the first cell.")
   (set-cdr! [p val] "Adapt the value of the second cell."))
+
+(def null nil)
