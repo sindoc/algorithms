@@ -1,6 +1,6 @@
 (ns com.khakbaz.algorithms.clojure.memory.fixed.pair)
 
-(defprotocol manual-memory-manager
+(defprotocol fixed-size-manual-memory-manager
   "Memory should be freed by the programmer."
   (free [p]))
 
