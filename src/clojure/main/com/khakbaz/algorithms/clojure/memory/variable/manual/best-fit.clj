@@ -185,12 +185,10 @@
       [top]
       (if (< top addr)
         (let [right (right-child @addr-tree top)]
-          (println "branch-1")
           (if (= right null)
             (right-child! @addr-tree top addr)
             (insert-address right)))
         (let [left (left-child @addr-tree top)]
-          (println "branch-2")
           (if (= left null)
             (left-child! @addr-tree top addr)
             (insert-address left)))))
@@ -225,8 +223,10 @@
 ;(defn- delete-free [addr]
 ;  )
 
-(defn- reset-free []
-  (set-size-and-addr-trees! null null))
+(defn- reset-free
+  []
+  (set-size-and-addr-trees!
+    null null))
 
 (defn- init
   []
@@ -235,7 +235,8 @@
   (insert-free 0 mem-size))
 
 
-(defn- address-plus-index [addr idx]
+(defn- address-plus-index
+  [addr idx]
   (if (not (number? idx))
     (throw (IllegalArgumentException.
       "must be a number")))
