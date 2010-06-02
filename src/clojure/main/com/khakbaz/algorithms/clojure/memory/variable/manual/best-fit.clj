@@ -1,4 +1,4 @@
-(ns com.khakbaz.algorithms.clojure.memory.variable.manual.best-ft
+(ns com.khakbaz.algorithms.clojure.memory.variable.manual.best-fit
   (:import
     [java.util Random]
     [java.lang
