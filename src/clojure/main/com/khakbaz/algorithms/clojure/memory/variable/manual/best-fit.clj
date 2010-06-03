@@ -23,19 +23,23 @@
 
 (defprotocol binary-tree-navigator
   (left-child
-    [self node])
+    [self node]
+    [self])
   (left-child!
-    [self node val])
+    [self node val]
+    [self val])
   (right-child
-    [self node])
+    [self node]
+    [self])
   (right-child!
-    [self node val])
+    [self node val]
+    [self val])
   (null?
     [self]))
 
 (def
   #^{:private true}
-  self (ref nil))
+  mem (ref nil))
 
 (defn- peek
   [addr]
@@ -57,17 +61,29 @@
 (extend weird-tree
   binary-tree-navigator
   {:left-child
-  (fn [self addr]
-    (peek (+ (.offset self) addr)))
+  (fn
+    ([self addr]
+      (peek (+ (.offset self) addr)))
+    ([self]
+      (peek (+ (.offset self) (.root self)))))
    :left-child!
-   (fn [self addr val]
-     (poke! (+ addr (.offset self)) val))
+   (fn
+     ([self addr val]
+       (poke! (+ addr (.offset self)) val))
+     ([self val]
+       (poke! (+ (.root self) (.offset self)) val)))
    :right-child
-   (fn [self addr]
-     (peek (+ addr (.offset self) 2)))
+   (fn
+     ([self addr]
+       (peek (+ addr (.offset self) 2)))
+     ([self]
+       (peek (+ (.root self) (.offset self) 2))))
    :right-child!
-   (fn [self addr val]
-     (poke! (+ addr (.offset self) 2) val))
+   (fn
+     ([self addr val]
+       (poke! (+ addr (.offset self) 2) val))
+     ([self val]
+       (poke! (+ (.root self) (.offset self) 2) val)))
    :null?
    (fn [self]
      (= (.root self) null))})
@@ -82,12 +98,12 @@
   addr-tree-offset
   3)
 
-(def- make-size-tree
+(defn- make-size-tree
   [root]
   (weird-tree.
     root size-tree-offset))
 
-(def- make-addr-tree
+(defn- make-addr-tree
   [root]
   (weird-tree.
     root addr-tree-offset))
@@ -216,12 +232,99 @@
       (set-size-tree! siz)
       (insert-address (size-tree-root)))))
 
-;(defn- delete-next-address [addr node op]
-;  (cond
-;    (right-child node)))
-;
-;(defn- delete-free [addr]
-;  )
+(defn- delete-next-address [addr node op]
+  (cond
+    (= (right-child node) null)
+    [(op (left-child node))
+     node]
+    :else
+    (delete-next-address addr
+      (make-addr-tree
+        (right-child node))
+      (fn [ref]
+        (right-child! node
+          (make-addr-tree ref))))))
+
+(defn- delete-address [addr node op]
+  (cond
+    (> addr (.root node))
+    (delete-address addr
+      (make-addr-tree
+        (right-child node))
+      (fn [ref]
+        (right-child! node
+          (make-addr-tree ref))))
+    (= (left-child node) null)
+    (op (right-child node))
+    (= (right-child node) null)
+    (op (left-child node))
+    :else
+    (let
+      [hold
+       (delete-next-address addr
+         (make-addr-tree
+           (left-child node))
+         (fn [ref]
+           (left-child! node
+             (make-addr-tree ref))))]
+      (left-child! hold (left-child node))
+      (right-child hold (right-child node))
+      (op hold))))
+
+(defn- delete-next-size [addr node op]
+  (cond
+    (= (left-child node) null)
+    [(op (right-child node))
+     node]
+    :else
+    (delete-next-size addr
+      (make-size-tree
+        (left-child node))
+      (fn [ref]
+        (left-child! node
+          (make-size-tree ref))))))
+
+(defn- delete-size [addr node op]
+  (let [siz (size addr)]
+    (cond
+      (< siz (size (.root node)))
+      (delete-size addr
+        (make-size-tree
+          (left-child node))
+        (fn [ref]
+          (left-child! node
+            (make-addr-tree ref))))
+      (> siz (size (.root node)))
+      (delete-size addr
+        (make-size-tree
+          (right-child node))
+        (fn [ref]
+          (right-child! node
+            (make-size-tree ref))))
+      (not= addr node)
+      (delete-size addr
+        (make-size-tree
+          (right-child node))
+        (fn [ref]
+          (right-child! node
+            (make-size-tree ref))))
+      (= (left-child node) null)
+      (op (right-child node))
+      (= (right-child node) null)
+      (op (left-child node))
+      :else
+      (let
+        [hold
+         (delete-next-size addr
+           (make-size-tree
+             (right-child node))
+           (fn [ref]
+             (right-child! node
+               (make-size-tree ref))))]))))
+
+(defn- delete-free [addr]
+  (delete-address addr @addr-tree set-addr-tree!)
+  (delete-size addr @size-tree set-size-tree!))
 
 (defn- reset-free
   []
@@ -234,12 +337,11 @@
     (vec (replicate mem-size null)))
   (insert-free 0 mem-size))
 
-
 (defn- address-plus-index
   [addr idx]
   (if (not (number? idx))
     (throw (IllegalArgumentException.
-      "must be a number")))
+      "Index must be a number, given:" idx)))
   (if (< idx 0)
     (throw (IllegalArgumentException. "Must be positive")))
   (let
@@ -250,18 +352,8 @@
           "Your index is too high or too low")))
     (+ addr idx 1)))
 
-;(defn length-impl
-;  [v]
-;  (- (peek 1)))
-;
 ;(extend vector
 ;  variable-size-memory-manager
 ;  {:vlength length-impl})
 
 (init)
-
-;(def x (atom 0))
-;(def r (j/Random.))
-;(dosync (ref-set mem (vec
-;  (map (fn [a]
-;    (swap! x (fn [b] (.j/nextInt r mem-size))) @x) @mem))))
