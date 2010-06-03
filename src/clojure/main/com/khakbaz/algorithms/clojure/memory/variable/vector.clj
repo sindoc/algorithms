@@ -8,9 +8,8 @@
 (defprotocol variable-size-memory-manager
   "Common operations provided by a variable size e.g. vectors
   memory manager"
-  (vlength [v])
-  ;(vref [v i])
-  ;(vset! [v i val])
-  )
+  (vector-length [v])
+  (vector-ref [v i])
+  (vector-set! [v i val]))
 
 (def null nil)

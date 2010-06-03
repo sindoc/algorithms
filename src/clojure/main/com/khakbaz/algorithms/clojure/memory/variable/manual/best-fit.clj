@@ -139,6 +139,7 @@
 
 (defn- set-size-tree!
   [siz]
+  (println "setting the size-tree to " siz)
   (dosync
     (ref-set size-tree
       (make-size-tree siz))))
@@ -159,23 +160,34 @@
   []
   (.root @size-tree))
 
+(defn- find-size-helper
+  [siz top]
+  (println "start" siz top)
+  (cond
+    (= top null)
+    (do
+      (println "branch-1" top siz null)
+      null)
+    (= (size top) siz)
+    (do
+      (println "branch-2")
+      top)
+    (< (size top) siz)
+    (do
+      (println "branch-3")
+      (find-size-helper siz
+        (right-child @size-tree top)))
+    :else
+    (do (println "branch-4")
+      (let [try (find-size-helper siz (left-child @size-tree top))]
+        (println "try = " try)
+        (if (= try null)
+          top
+          try)))))
+
 (defn- find-size
   [siz]
-  (letfn
-    [(rec [top]
-      (cond
-        (= top null)
-        null
-        (= (size top) siz)
-        top
-        (< (size top) siz)
-        (rec (right-child @size-tree top))
-        :else
-        (let [try (rec (left-child @size-tree top))]
-          (if (= try null)
-            top
-            try))))]
-    (rec (size-tree-root))))
+  (find-size-helper siz (size-tree-root)))
 
 (defn- find-addr
   [addr]
@@ -194,43 +206,47 @@
             try))))]
     (rec (addr-tree-root))))
 
+(defn- insert-address
+  [addr siz top]
+  (if (< top addr)
+    (let [right (right-child @addr-tree top)]
+      (if (= right null)
+        (right-child! @addr-tree top addr)
+        (insert-address right)))
+    (let [left (left-child @addr-tree top)]
+      (if (= left null)
+        (left-child! @addr-tree top addr)
+        (insert-address left)))))
+
+(defn- insert-size
+  [addr siz top]
+  (if (>= (size top) siz)
+    (let [left (left-child @size-tree top)]
+      (if (= left null)
+        (left-child! @size-tree top addr)
+        (insert-size left)))
+    (let [right (right-child @size-tree top)]
+      (if (= right null)
+        (right-child! @size-tree top addr)
+        (insert-size right)))))
+
 (defn- insert-free
   [addr siz]
-  (letfn
-    [(insert-address
-      [top]
-      (if (< top addr)
-        (let [right (right-child @addr-tree top)]
-          (if (= right null)
-            (right-child! @addr-tree top addr)
-            (insert-address right)))
-        (let [left (left-child @addr-tree top)]
-          (if (= left null)
-            (left-child! @addr-tree top addr)
-            (insert-address left)))))
-     (insert-size
-       [top]
-       (if (>= (size top) siz)
-         (let [left (left-child @size-tree top)]
-           (if (= left null)
-             (left-child! @size-tree top addr)
-             (insert-size left)))
-         (let [right (right-child @size-tree top)]
-           (if (= right null)
-             (right-child! @size-tree top addr)
-             (insert-size right)))))]
-    (dosync
-      (size! addr siz)
-      (left-child! @addr-tree addr null)
-      (right-child! @addr-tree addr null)
-      (left-child! @size-tree addr null)
-      (right-child! @size-tree addr null))
-    (if (null? @addr-tree)
-      (set-addr-tree! addr)
-      (insert-address (addr-tree-root)))
-    (if (null? @size-tree)
-      (set-size-tree! siz)
-      (insert-address (size-tree-root)))))
+  (println "start insert free" addr siz)
+  (dosync
+    (size! addr siz)
+    (left-child! @addr-tree addr null)
+    (right-child! @addr-tree addr null)
+    (left-child! @size-tree addr null)
+    (right-child! @size-tree addr null))
+  (println "before insert-address")
+  (if (null? @addr-tree)
+    (set-addr-tree! addr)
+    (insert-address addr siz (addr-tree-root)))
+  (println "after insert-address before insert-size")
+  (if (null? @size-tree)
+    (set-size-tree! addr)
+    (insert-size addr siz (size-tree-root))))
 
 (defn- delete-next-address [addr node op]
   (cond
@@ -274,8 +290,9 @@
 (defn- delete-next-size [addr node op]
   (cond
     (= (left-child node) null)
-    [(op (right-child node))
-     node]
+    (do
+      (op (right-child node))
+      node)
     :else
     (delete-next-size addr
       (make-size-tree
@@ -288,42 +305,58 @@
   (let [siz (size addr)]
     (cond
       (< siz (size (.root node)))
-      (delete-size addr
-        (make-size-tree
-          (left-child node))
-        (fn [ref]
-          (left-child! node
-            (make-addr-tree ref))))
+      (do
+        (println "delete-size-branch-1:")
+        (delete-size addr
+          (make-size-tree
+            (left-child node))
+          (fn [ref]
+            (left-child! node
+              (make-addr-tree ref)))))
       (> siz (size (.root node)))
-      (delete-size addr
-        (make-size-tree
-          (right-child node))
-        (fn [ref]
-          (right-child! node
-            (make-size-tree ref))))
-      (not= addr node)
-      (delete-size addr
-        (make-size-tree
-          (right-child node))
-        (fn [ref]
-          (right-child! node
-            (make-size-tree ref))))
+      (do
+        (println "delete-size-branch-2:")
+        (delete-size addr
+          (make-size-tree
+            (right-child node))
+          (fn [ref]
+            (right-child! node
+              (make-size-tree ref)))))
+      (not= addr (.root node))
+      (do
+        (println "delete-size-branch-3:" addr (.root node))
+        (delete-size addr
+          (make-size-tree
+            (right-child node))
+          (fn [ref]
+            (right-child! node
+              (make-size-tree ref)))))
       (= (left-child node) null)
-      (op (right-child node))
+      (do
+        (println "delete-size-branch-4:")
+        (op (right-child node)))
       (= (right-child node) null)
-      (op (left-child node))
+      (do
+        (println "delete-size-branch-5:")
+        (op (left-child node)))
       :else
-      (let
-        [hold
-         (delete-next-size addr
-           (make-size-tree
-             (right-child node))
-           (fn [ref]
-             (right-child! node
-               (make-size-tree ref))))]))))
+      (do
+        (println "delete-size-branch-6:")
+        (let
+          [hold
+           (delete-next-size addr
+             (make-size-tree
+               (right-child node))
+             (fn [ref]
+               (right-child! node
+                 (make-size-tree ref))))]
+          (left-child! hold (left-child node))
+          (right-child! hold (right-child node))
+          (op hold))))))
 
 (defn- delete-free [addr]
   (delete-address addr @addr-tree set-addr-tree!)
+  (println "after delete-address and before delete-size")
   (delete-size addr @size-tree set-size-tree!))
 
 (defn- reset-free
@@ -343,17 +376,61 @@
     (throw (IllegalArgumentException.
       "Index must be a number, given:" idx)))
   (if (< idx 0)
-    (throw (IllegalArgumentException. "Must be positive")))
+    (throw (IllegalArgumentException. "Index must be non-negative, given:" idx)))
   (let
     [size (- (peek addr) 1)]
     (if (>= idx size)
       (throw
         (IndexOutOfBoundsException.
-          "Your index is too high or too low")))
+          "This index is too high or too low:")))
     (+ addr idx 1)))
 
-;(extend vector
-;  variable-size-memory-manager
-;  {:vlength length-impl})
+(defn- make-vector-helper
+  [siz]
+  (let
+    [hold-addr (find-size siz)]
+    (println "find-size done" hold-addr mem)
+    (if (= hold-addr null)
+      null
+      (let [hold-size (peek hold-addr)]
+        (println "befor delete-free" hold-addr)
+        (delete-free hold-addr)
+        (println "after delete-free" hold-size hold-addr)
+        (if (>= (- hold-size siz) min-size)
+          (do
+            (println "before insert-free")
+            (insert-free (+ hold-addr siz) (- hold-size siz))
+            (poke! hold-addr siz))
+          (poke! hold-addr hold-size))
+        (vector. hold-addr)))))
+
+(defn make-vector
+  [size]
+  (make-vector-helper
+    (if (< (inc size) min-size)
+      min-size
+      (inc size))))
+
+(defn vector-ref
+  [v i]
+  (peek (address-plus-index (.addr v) i)))
+
+(defn vector-set!
+  [v i val]
+  (poke! (address-plus-index (.addr v) i) val))
+
+(defn vector-length
+  [v]
+  (- (peek (.addr v)) 1))
+
+(extend vector
+  variable-size-memory-manager
+  {:vector-ref
+  vector-ref
+   :vector-set!
+   vector-set!
+   :vector-length
+   vector-length})
 
 (init)
+(def v (make-vector 10))
