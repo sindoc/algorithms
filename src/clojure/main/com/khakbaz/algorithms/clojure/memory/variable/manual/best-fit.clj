@@ -1,6 +1,5 @@
 (ns com.khakbaz.algorithms.clojure.memory.variable.manual.best-fit
   (:import
-    [java.util Random]
     [java.lang
      IndexOutOfBoundsException
      IllegalArgumentException])
@@ -21,7 +20,15 @@
   #^{:private true}
   mem-size 100)
 
-(defprotocol binary-tree-navigator
+(defprotocol binary-tree-comparison
+  (<?
+    [self node])
+  (>?
+    [self node])
+  (=?
+    [self node]))
+
+(defprotocol binary-tree-navigation
   (left-child
     [self node]
     [self])
@@ -58,8 +65,13 @@
   weird-tree
   [root offset])
 
+(defn- weird-tree-operator-dispatcher
+  [op]
+  (fn [self operand]
+    (op (.root self) operand)))
+
 (extend weird-tree
-  binary-tree-navigator
+  binary-tree-navigation
   {:left-child
   (fn
     ([self addr]
@@ -86,7 +98,17 @@
        (poke! (+ (.root self) (.offset self) 2) val)))
    :null?
    (fn [self]
-     (= (.root self) null))})
+     (= (.root self) null))
+   :peek
+   (fn [self]
+     (peek (.root self)))}
+  binary-tree-comparison
+   {:<?
+   (weird-tree-operator-dispatcher <)
+   :=?
+   (weird-tree-operator-dispatcher =)
+   :>?
+   (weird-tree-operator-dispatcher >)})
 
 (def
   #^{:private true}
@@ -189,33 +211,35 @@
   [siz]
   (find-size-helper siz (size-tree-root)))
 
+(defn- find-addr-helper
+  [addr top]
+  (cond
+    (null? top) null
+    (=? top addr)
+    (.root top)
+    (>? top addr)
+    (find-addr-helper
+      (left-child top))
+    :else
+    (let [try (find-addr-helper (right-child top))]
+      (if (= try null)
+        (.root top)
+        try))))
+
 (defn- find-addr
   [addr]
-  (letfn
-    [(rec
-      [top]
-      (cond
-        (= top null) null
-        (= top addr) top
-        (> top addr)
-        (rec (left-child @addr-tree top))
-        :else
-        (let [try (rec (right-child @addr-tree top))]
-          (if (= try null)
-            top
-            try))))]
-    (rec (addr-tree-root))))
+  (find-addr-helper addr @addr-tree))
 
 (defn- insert-address
   [addr siz top]
-  (if (< top addr)
-    (let [right (right-child @addr-tree top)]
-      (if (= right null)
-        (right-child! @addr-tree top addr)
+  (if (<? top addr)
+    (let [right (make-addr-tree (right-child top))]
+      (if (null? right)
+        (right-child! top addr)
         (insert-address right)))
-    (let [left (left-child @addr-tree top)]
-      (if (= left null)
-        (left-child! @addr-tree top addr)
+    (let [left (make-addr-tree (left-child top))]
+      (if (null? left)
+        (left-child! top addr)
         (insert-address left)))))
 
 (defn- insert-size
@@ -242,7 +266,7 @@
   (println "before insert-address")
   (if (null? @addr-tree)
     (set-addr-tree! addr)
-    (insert-address addr siz (addr-tree-root)))
+    (insert-address addr siz @addr-tree))
   (println "after insert-address before insert-size")
   (if (null? @size-tree)
     (set-size-tree! addr)
@@ -422,6 +446,18 @@
 (defn vector-length
   [v]
   (- (peek (.addr v)) 1))
+
+;(defn vector-free
+;  [v]
+;  (let
+;     [addr (.addr v)
+;      siz (size addr)
+;      hold-addr (make-addr-tree (find-addr (+ addr siz)))]
+;   (if (not (null? hold-addr))
+;    (let
+;      [hold-size (peek hold-addr)]
+;      (when (=? hold-addr (+ addr siz))
+;        (delete-free (.root hold-addr))
 
 (extend vector
   variable-size-memory-manager
